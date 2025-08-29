@@ -3,20 +3,20 @@ from discord.ext import tasks
 import aiohttp
 import asyncio
 import random
+import os
 
 # -------------------------
 # CONFIG
 # -------------------------
-TOKEN = "MTQwNjQ2ODc0ODY5MjY4NDkwMQ.GgHd1X.UOCOINJ-tq4APouDTwTMDhfjQo7c4DnB4csW6E"
-CHANNEL_ID = 1408193716602146999  # Replace with your Discord channel ID
-PLACE_ID = 125760703264498  # Replace with your Roblox game PlaceId
+TOKEN = os.getenv("DISCORD_TOKEN")  # Load from secret
+CHANNEL_ID = int(os.getenv("CHANNEL_ID", 0))  # Optional: also as secret
+PLACE_ID = int(os.getenv("PLACE_ID", 0))      # Optional: also as secret
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
 # Get visits using UniverseId API
 async def get_visits():
-    # Get UniverseId from PlaceId first
     async with aiohttp.ClientSession() as session:
         async with session.get(f"https://apis.roblox.com/universes/v1/places/{PLACE_ID}/universe") as r:
             if r.status != 200:
@@ -72,9 +72,7 @@ async def send_game_data():
     visits = await get_visits()
 
     if visits is not None:
-        # Milestone = visits + random 100–150
         milestone = visits + random.randint(100, 150)
-
         msg = (
             "--------------------------------------------------\n"
             f"👤🎮 Active players: {active}\n"
