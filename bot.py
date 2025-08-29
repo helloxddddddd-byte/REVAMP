@@ -6,11 +6,11 @@ import random
 import os
 
 # -------------------------
-# CONFIG
+# CONFIG (from Railway secrets)
 # -------------------------
-TOKEN = os.getenv("DISCORD_TOKEN")  # Load from secret
-CHANNEL_ID = int(os.getenv("CHANNEL_ID", 0))  # Optional: also as secret
-PLACE_ID = int(os.getenv("PLACE_ID", 0))      # Optional: also as secret
+TOKEN = os.getenv("DISCORD_TOKEN")
+CHANNEL_ID = int(os.getenv("CHANNEL_ID", 0))
+PLACE_ID = int(os.getenv("PLACE_ID", 0))
 
 intents = discord.Intents.default()
 client = discord.Client(intents=intents)
@@ -66,7 +66,7 @@ async def send_game_data():
     if not channel:
         return
 
-    # Step 1: wait 3s before collecting active players (fresh data)
+    # wait 3s for fresh data
     await asyncio.sleep(3)
     active = await get_active_players()
     visits = await get_visits()
